@@ -1,11 +1,22 @@
-dependencies=$(find /tmp/artifacts/third-party-dependencies -name "*.deb")
-for path in ${dependencies}
-do
-  sudo dpkg -i ${path}
-done
+#!/bin/bash
+dependencyDir="/tmp/artifacts/third-party-dependencies"
+plenumDir="/tmp/artifacts/plenum-deb"
+nodeDir="/tmp/artifacts/indy_node-deb"
 
-node=$(find /tmp/artifacts/indy_node-deb -name "*.deb")
-for path in ${node}
-do
-  sudo dpkg -i ${path}
-done
+if [ -d "${dependencyDir}" ]; then
+  dpkg --install --recursive "${dependencyDir}"
+else
+  echo "${dependencyDir} not found."
+fi
+
+if [ -d "${plenumDir}" ]; then
+  dpkg --install --recursive "${plenumDir}"
+else
+  echo "${plenumDir} not found."
+fi
+
+if [ -d "${nodeDir}" ]; then
+  dpkg --install --recursive "${nodeDir}"
+else
+  echo "${nodeDir} not found."
+fi
