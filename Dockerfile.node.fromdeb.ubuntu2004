@@ -1,0 +1,31 @@
+FROM ubuntu:20.04
+
+RUN apt-get update -y && apt-get install -y \
+    gnupg \
+    ca-certificates \
+    unzip
+
+# ========================================================================================================
+# Install Pelenum - This is temp
+# --------------------------------------------------------------------------------------------------------
+# Hyperledger
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9692C00E657DDE61
+RUN echo "deb  https://hyperledger.jfrog.io/artifactory/indy focal dev"  >> /etc/apt/sources.list
+RUN apt-get update -y && apt-get install -y \
+    python3-libnacl=1.6.1 \
+    python3-sortedcontainers=1.5.7 \
+    python3-ujson=1.33 \
+    indy-plenum=1.13.0~dev175
+# ========================================================================================================
+
+
+# ADD https://hyperledger.jfrog.io/ui/api/v1/download?repoKey=indy&path=pool%252Ffocal%252Fdev%252Fi%252Findy-plenum%252Findy-plenum_1.13.0~dev175_amd64.deb&isNativeBrowsing=false /tmp
+
+
+
+ADD https://github.com/pSchlarb/indy-node/releases/download/v1.14.0rc1/indy_node-deb.zip /tmp
+ADD https://github.com/pSchlarb/indy-node/releases/download/v1.14.0rc1/third-party-dependencies.zip /tmp
+RUN unzip /tmp/indy_node-deb.zip -d /tmp
+RUN unzip /tmp/third-party-dependencies.zip -d /tmp
+# RUN dpkg -i /tmp/artifacts/indy_node-deb/indy-node_1.14.0~rc1_amd64.deb
+# RUN apt-get install -f -y

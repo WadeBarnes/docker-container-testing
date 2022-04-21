@@ -1,0 +1,19 @@
+FROM ubuntu:20.04
+RUN apt-get update -y && apt-get install -y \
+    gnupg \ 
+    ca-certificates
+
+# ========================================================================================================
+# Update repository signing keys
+# --------------------------------------------------------------------------------------------------------
+# Hyperledger
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9692C00E657DDE61
+# ========================================================================================================
+
+RUN echo "deb  https://hyperledger.jfrog.io/artifactory/indy focal dev"  >> /etc/apt/sources.list
+RUN apt-get update -y && apt-get install -y \
+    python3-libnacl=1.6.1 \
+    python3-sortedcontainers=1.5.7 \
+    python3-ujson=1.33 \
+    indy-plenum=1.13.0~dev175 \
+    indy-node=1.13.0~dev5
