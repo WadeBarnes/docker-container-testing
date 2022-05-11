@@ -1,6 +1,6 @@
 FROM ubuntu:20.04
 RUN apt-get update -y && apt-get install -y \
-    gnupg \
+    gnupg \ 
     ca-certificates
 
 # ========================================================================================================
@@ -12,16 +12,30 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9692C00E657DDE61 &&
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88
 # ========================================================================================================
 
+# Plenum
+#  - https://github.com/hyperledger/indy-plenum/issues/1546
+#  - Needed to pick up rocksdb=5.8.8
 RUN echo "deb  https://hyperledger.jfrog.io/artifactory/indy focal dev"  >> /etc/apt/sources.list && \
     echo "deb http://security.ubuntu.com/ubuntu bionic-security main"  >> /etc/apt/sources.list && \
-    echo "deb https://repo.sovrin.org/deb bionic master" >> /etc/apt/sources.list
+    echo "deb https://repo.sovrin.org/deb bionic master" >> /etc/apt/sources.list && \
+    echo "deb https://repo.sovrin.org/sdk/deb bionic master" >> /etc/apt/sources.list
+
 RUN apt-get update -y && apt-get install -y \
-    python3-libnacl=1.6.1 \
-    python3-sortedcontainers=1.5.7 \
-    python3-ujson=1.33 \
-    python3-pyzmq=18.1.0 \
-    indy-plenum=1.13.0~dev175 \
-    indy-node=1.13.0~dev5 \
+    # Python
+    python3-pip \
+    python3-nacl \
+    # rocksdb python wrapper
+    rocksdb=5.8.8 \
+    libgflags-dev \
+    libsnappy-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    liblz4-dev \
+    libgflags-dev \
+    # Indy Node and Plenum
     libssl1.0.0 \
     ursa=0.3.2-1 \
     && mv /usr/lib/ursa/* /usr/lib && rm -rf /usr/lib/ursa
+
+RUN pip3 install -U \
+    indy-node==1.13.0.dev24\
