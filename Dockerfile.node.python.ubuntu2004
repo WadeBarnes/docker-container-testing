@@ -38,4 +38,5 @@ RUN apt-get update -y && apt-get install -y \
     && mv /usr/lib/ursa/* /usr/lib && rm -rf /usr/lib/ursa
 
 RUN pip3 install -U \
+    pyzmq==18.1.0 \
     indy-node==1.13.0.dev24\

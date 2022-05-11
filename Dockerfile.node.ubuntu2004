@@ -16,6 +16,14 @@ RUN echo "deb  https://hyperledger.jfrog.io/artifactory/indy focal dev"  >> /etc
     echo "deb http://security.ubuntu.com/ubuntu bionic-security main"  >> /etc/apt/sources.list && \
     echo "deb https://repo.sovrin.org/deb bionic master" >> /etc/apt/sources.list
 RUN apt-get update -y && apt-get install -y \
+    # rocksdb python wrapper
+    rocksdb=5.8.8 \
+    libgflags-dev \
+    libsnappy-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    liblz4-dev \
+    libgflags-dev \
     python3-libnacl=1.6.1 \
     python3-sortedcontainers=1.5.7 \
     python3-ujson=1.33 \
