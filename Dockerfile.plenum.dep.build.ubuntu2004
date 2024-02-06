@@ -1,0 +1,10 @@
+# Container for locally testing Indy-Plenum 3rd Party Dependencies build.
+# Recreates the environment used by the GHA workflows
+FROM ghcr.io/hyperledger/indy-plenum/plenum-build:ubuntu-2004
+# FROM plenum-build:local-test
+
+# Plenum Dependancy Build:
+# git clone https://github.com/hyperledger/indy-plenum.git
+# mkdir -p $(pwd)indy-plenum/build-scripts/ubuntu-2004/cache/3rd-party-dependencies/
+# $(pwd)indy-plenum/build-scripts/ubuntu-2004/build-3rd-parties.sh ./cache/3rd-party-dependencies
+# mv $(pwd)indy-plenum/build-scripts/ubuntu-2004/cache/* /tmp/third-party-dependencies

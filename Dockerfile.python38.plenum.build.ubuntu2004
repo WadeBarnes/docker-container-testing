@@ -1,0 +1,44 @@
+# Container for locally testing Indy-Plenum build.
+# Recreates the environment used by the GHA workflows
+FROM ubuntu:20.04
+
+RUN DEBIAN_FRONTEND=noninteractive && TZ=Etc/UTC && apt-get update -y && apt-get install -y tzdata
+
+RUN apt-get update -y && apt-get install -y \
+    software-properties-common \
+    git \
+    build-essential \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libssl-dev \
+    libsqlite3-dev \
+    libreadline-dev \
+    libffi-dev \
+    wget \
+    libbz2-dev \
+    pkg-config \
+    make
+
+RUN wget https://www.python.org/ftp/python/3.8.18/Python-3.8.18.tar.xz
+RUN tar -xf Python-3.8.18.tar.xz
+RUN cd Python-3.8.18 && \
+    ./configure --enable-optimizations && \
+    make install
+
+RUN apt-get update -y && apt-get install -y \
+    python3-pip \
+    vim
+
+# https://github.com/hyperledger/indy-shared-gha/commit/aa44fb2ef2160d07c7311d2d66ce235eef2a704e
+# Installation of pip==23.0.1 is a workaround for the deprecated --install-option flag
+# used in plenum's setup.py to install pyzmq==22.3.0.
+RUN python3 -m pip install --ignore-installed --upgrade pip==23.0.1
+
+# Plenum Build:
+# python3 -m pip install pytest-runner wheel
+# git clone https://github.com/hyperledger/indy-plenum.git
+# cd indy-plenum
+# ./build-scripts/ubuntu-2004/prepare-package.sh ./ plenum "1.13.1" python-packages
+# python3 setup.py sdist --dist-dir /tmp/dist bdist_wheel --dist-dir /tmp/dist
