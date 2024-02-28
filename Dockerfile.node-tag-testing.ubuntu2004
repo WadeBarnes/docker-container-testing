@@ -1,0 +1,59 @@
+# Container for locally testing the indy-node tag workflow
+# Recreates the environment used by the GHA workflows
+FROM ubuntu:20.04
+
+RUN DEBIAN_FRONTEND=noninteractive && TZ=Etc/UTC && apt-get update -y && apt-get install -y tzdata
+
+RUN apt-get update -y && apt-get install -y \
+    gnupg \
+    software-properties-common \
+    apt-transport-https \
+    ca-certificates \
+    git \
+    vim \
+    build-essential
+
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9692C00E657DDE61
+RUN add-apt-repository 'deb  https://hyperledger.jfrog.io/artifactory/indy focal stable'
+
+RUN apt-get update -y && apt-get install -y \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libssl-dev \
+    libsqlite3-dev \
+    libreadline-dev \
+    libffi-dev \
+    wget \
+    libbz2-dev \
+    pkg-config \
+    make \
+    rocksdb=5.8.8 \
+    libgflags-dev \
+    libsnappy-dev \
+    liblz4-dev
+
+# Install Python 3.8.18
+RUN wget https://www.python.org/ftp/python/3.8.18/Python-3.8.18.tar.xz
+RUN tar -xf Python-3.8.18.tar.xz
+RUN cd Python-3.8.18 && \
+    ./configure --enable-optimizations && \
+    make install
+
+# Install Pip
+RUN apt-get update -y && apt-get install -y \
+    python3-pip
+
+RUN pip install packaging \
+    importlib_metadata==3.10.1 \
+    Cython==0.29.36 \
+    indy-plenum==1.13.1 \
+    pyzmq==22.3.0
+
+RUN python3 -m pip install --ignore-installed --upgrade pip==23.0.1
+
+# Bump Version:
+# git clone https://github.com/hyperledger/indy-node
+# cd indy-node
+# ./bump_version.sh "1.13.2"
