@@ -17,7 +17,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9692C00E657DDE61 &&
 # ========================================================================================================
 
 # Note:
-# - The hyperledger.jfrog.io is given priority to avoid dependany installation issues.
+# - The hyperledger.jfrog.io is given priority to avoid dependancy installation issues.
 RUN echo "deb  https://hyperledger.jfrog.io/artifactory/indy focal stable"  >> /etc/apt/sources.list && \
     printf '%s\n%s\n%s\n' 'Package: *' 'Pin: origin hyperledger.jfrog.io' 'Pin-Priority: 1001' >> /etc/apt/preferences  && \
     echo "deb http://security.ubuntu.com/ubuntu bionic-security main"  >> /etc/apt/sources.list && \
@@ -42,9 +42,9 @@ RUN echo "deb  https://hyperledger.jfrog.io/artifactory/indy focal stable"  >> /
 
 # RUN curl -O https://hyperledger.jfrog.io/artifactory/indy/pool/focal/stable/i/indy-node/indy-node_1.13.2_amd64.deb
 
-
-RUN apt update -y && apt install -y \
-    indy-node=1.13.2
-
 # RUN apt update -y && apt install -y \
 #     /indy-node_1.13.2_amd64.deb indy-plenum=1.13.1
+
+RUN apt update -y && apt install -y \
+    indy-node=1.13.2 \
+    && mv /usr/lib/ursa/* /usr/lib && rm -rf /usr/lib/ursa
