@@ -1,0 +1,31 @@
+FROM ubuntu:20.04
+RUN apt-get update -y && apt-get install -y \
+    apt-utils\
+    gnupg \
+    ca-certificates \
+    gnupg \
+    apt-transport-https \
+    curl
+
+# ========================================================================================================
+# Update repository signing keys
+# --------------------------------------------------------------------------------------------------------
+    # Hyperledger Key
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 9692C00E657DDE61 && \
+    # Sovrin Repo Key
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys CE7709D068DB5E88 && \
+    # New Sovrin Repo Key
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3BC8C2DD662F1C45
+# ========================================================================================================
+
+# Note:
+# - The hyperledger.jfrog.io is given priority to avoid dependancy installation issues.
+RUN echo "deb  https://hyperledger.jfrog.io/artifactory/indy focal stable"  >> /etc/apt/sources.list && \
+    printf '%s\n%s\n%s\n' 'Package: *' 'Pin: origin hyperledger.jfrog.io' 'Pin-Priority: 1001' >> /etc/apt/preferences  && \
+    echo "deb http://security.ubuntu.com/ubuntu bionic-security main"  >> /etc/apt/sources.list && \
+    echo "deb https://repo.sovrin.org/deb bionic master" >> /etc/apt/sources.list && \
+    echo "deb https://sovrin.jfrog.io/artifactory/deb focal stable" >> /etc/apt/sources.list
+
+RUN apt update -y && apt install -y \
+    sovrin=1.2.0 \
+    && mv /usr/lib/ursa/* /usr/lib && rm -rf /usr/lib/ursa
